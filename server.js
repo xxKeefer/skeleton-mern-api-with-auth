@@ -12,7 +12,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //VIEW ENGINE | this will get scrapped for React later
-const ejs = require("ejs");
 app.set("view-engine", "ejs");
 
 //DATABASE
@@ -39,6 +38,13 @@ app.use(
 require("./middleware/passport");
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  if (req.user) {
+    console.log(req.user.email, "=> [", req.url, "] @", Date.now());
+  }
+  next();
+});
 
 //ROUTES
 const auth = require("./routes/auth");
