@@ -10,7 +10,7 @@ const {
 const { authRedirect } = require("../middleware/auth");
 
 router.use(function (req, res, next) {
-  console.log(req.user, "=>", req.url, "@", Date.now());
+  console.log(req.user.email, "=>", req.url, "@", Date.now());
   next();
 });
 

@@ -42,11 +42,12 @@ app.use(passport.session());
 
 //ROUTES
 const auth = require("./routes/auth");
+const example = require("./routes/example");
 
 app.use("/auth", auth);
+app.use("/example", example);
 app.get("/", (req, res) => {
   const user = req.user;
-
   res.render("index.ejs", { user: user });
 });
 app.listen(port, () => {
