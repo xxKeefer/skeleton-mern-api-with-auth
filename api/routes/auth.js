@@ -6,8 +6,8 @@ const {
   logoutUser,
   renderLogin,
   renderSignup,
-} = require("../controller/auth");
-const { authRedirect } = require("../middleware/auth");
+} = require("../../controller/auth");
+const { authRedirect } = require("../../middleware/auth");
 
 router.route("/signup").get(authRedirect, renderSignup).post(createUser);
 

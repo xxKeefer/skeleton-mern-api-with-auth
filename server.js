@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -46,16 +47,19 @@ app.use((req, res, next) => {
   next();
 });
 
-//ROUTES
-const auth = require("./routes/auth");
-const example = require("./routes/example");
+//API ROUTES
+const apiRoutes = require("./api/apiRoutes");
+app.use("/api", apiRoutes);
 
-app.use("/auth", auth);
-app.use("/example", example);
-app.get("/", (req, res) => {
-  const user = req.user;
-  res.render("index.ejs", { user: user });
-});
+//if in production, serve static front end
+//SET REACT BUILD FOLDER
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+
 app.listen(port, () => {
   console.log("App listening @ port:" + port);
 });
