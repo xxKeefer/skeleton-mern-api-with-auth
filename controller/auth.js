@@ -1,15 +1,6 @@
 const User = require("../models/user");
 const passport = require("passport");
 
-//RENDER FUNCTIONS
-const renderSignup = (req, res) => {
-  res.render("signup.ejs");
-};
-
-const renderLogin = (req, res) => {
-  res.render("login.ejs");
-};
-
 //MODEL & SESSION FUNCTIONS
 const createUser = async (req, res, next) => {
   const handleNewUser = (user) => {
@@ -17,15 +8,14 @@ const createUser = async (req, res, next) => {
       if (err) {
         next(err);
       } else {
-        // res.status(201).json(user);
-        res.redirect("/");
+        res.status(201).json(user);
       }
     });
   };
 
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
   try {
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ username, email, password });
     handleNewUser(user);
   } catch (e) {
     res.status(400).json({ message: e.message });
@@ -33,16 +23,25 @@ const createUser = async (req, res, next) => {
 };
 
 const loginUser = (req, res, next) => {
-  const login = passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/auth/login",
-  });
-  login(req, res, next);
+  passport.authenticate("local", (err, user) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist." });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.status(200).json(user);
+    });
+  })(req, res, next);
 };
 
 const logoutUser = (req, res) => {
   req.session.destroy(() => {
-    res.redirect("/");
+    res.status(200).json({ message: "session destroyed." });
   });
 };
 
@@ -50,6 +49,4 @@ module.exports = {
   createUser,
   loginUser,
   logoutUser,
-  renderLogin,
-  renderSignup,
 };

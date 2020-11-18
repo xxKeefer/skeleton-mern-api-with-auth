@@ -12,9 +12,6 @@ const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-//VIEW ENGINE | this will get scrapped for React later
-app.set("view-engine", "ejs");
-
 //DATABASE
 mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
@@ -39,13 +36,6 @@ app.use(
 require("./middleware/passport");
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use((req, res, next) => {
-  if (req.user) {
-    console.log(req.user.email, "=> [", req.url, "] @", Date.now());
-  }
-  next();
-});
 
 //API ROUTES
 const apiRoutes = require("./api/apiRoutes");
