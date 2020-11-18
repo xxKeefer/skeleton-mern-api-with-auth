@@ -1,10 +1,10 @@
 //RENDER FUNCTIONS
-const renderPublic = (req, res) => {
-  res.render("public.ejs");
+const examplePublic = (req, res) => {
+  res.status(200).json({ message: "You hit the public route." });
 };
 
-const renderPrivate = (req, res) => {
-  res.render("private.ejs");
+const examplePrivate = (req, res) => {
+  res.status(200).json({ message: "You hit the private route." });
 };
 
-module.exports = { renderPublic, renderPrivate };
+module.exports = { examplePublic, examplePrivate };
